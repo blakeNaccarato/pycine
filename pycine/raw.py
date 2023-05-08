@@ -37,9 +37,7 @@ def frame_reader(
 
             data = f.read(image_size)
 
-            raw_image = create_raw_array(data, header)
-
-            yield raw_image
+            yield create_raw_array(data, header)
             frame += 1
             count -= 1
 
@@ -58,12 +56,11 @@ def read_bpp(header):
     bpp : int
         Bit depth of the cine file
     """
-    if header["bitmapinfoheader"].biCompression:
-        # After applying the linearization LUT the bit depth is 12bit
-        bpp = 12
-    else:
-        bpp = header["setup"].RealBPP
-    return bpp
+    return (
+        12
+        if header["bitmapinfoheader"].biCompression
+        else header["setup"].RealBPP
+    )
 
 
 def image_generator(
@@ -101,7 +98,7 @@ def image_generator(
         fetch_head = 1
     elif start_frame:
         fetch_head = start_frame
-    elif start_frame_cine:
+    else:
         first_image_number = header["cinefileheader"].FirstImageNo
         last_image_number = first_image_number + header["cinefileheader"].ImageCount - 1
         fetch_head = start_frame_cine - first_image_number
@@ -109,8 +106,7 @@ def image_generator(
             raise ValueError(
                 f"Cannot read frame {start_frame_cine:d}. This cine has only from {first_image_number:d} to {last_image_number:d}."
             )
-    raw_image_generator = frame_reader(cine_file, header, start_frame=fetch_head, count=count)
-    return raw_image_generator
+    return frame_reader(cine_file, header, start_frame=fetch_head, count=count)
 
 
 def read_frames(

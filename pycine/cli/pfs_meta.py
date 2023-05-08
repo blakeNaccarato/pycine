@@ -47,10 +47,7 @@ def show_metadata(header, cine_file):
 
 def parse_tone(tone):
     tone = tone.split()
-    if len(tone) % 2:
-        tone_label = tone.pop(0)
-    else:
-        tone_label = ""
+    tone_label = tone.pop(0) if len(tone) % 2 else ""
     tone_points = len(tone) // 2
     if tone_points > 32:
         click.secho("You can only set up to 32 tone points!", fg="red")

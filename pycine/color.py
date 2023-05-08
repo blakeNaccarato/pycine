@@ -107,9 +107,7 @@ def apply_gamma(rgb_image, setup):
 def resize(rgb_image, new_width):
     height, width = rgb_image.shape[:2]
     new_height = int(new_width * (float(height) / width))
-    res = cv2.resize(rgb_image, (new_width, new_height))
-
-    return res
+    return cv2.resize(rgb_image, (new_width, new_height))
 
 
 def decompose_cmatrix(calibration_matrix):

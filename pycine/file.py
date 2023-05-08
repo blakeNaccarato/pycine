@@ -117,7 +117,7 @@ def write_header(
 def backup_header(cine_file: Union[str, bytes, os.PathLike]):
     now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     header = read_header(cine_file)
-    with open(str(cine_file) + f"_metadata_backup_{now}", "xb") as f:
+    with open(f"{str(cine_file)}_metadata_backup_{now}", "xb") as f:
         f.write(header["cinefileheader"])
         f.write(header["bitmapinfoheader"])
         f.seek(header["cinefileheader"].OffSetup)
